@@ -1,3 +1,5 @@
+"use client"
+
 import { Topbar } from "@/components/layout/topbar"
 import { Button } from "@/components/primitives/button"
 import { Badge } from "@/components/primitives/badge"
@@ -6,18 +8,39 @@ import { apiFetch } from "@/lib/api"
 import type { Dataset } from "@/openapi/openapi-types"
 import Link from "next/link"
 import { DatasetActions } from "./dataset-actions"
+import { useEffect, useState } from "react"
 
-async function getDatasets() {
-  try {
-    return await apiFetch<Dataset[]>("/datasets")
-  } catch (error) {
-    console.error("[v0] Failed to fetch datasets:", error)
-    return []
+export default function DatasetsPage() {
+  const [datasets, setDatasets] = useState<Dataset[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchDatasets() {
+      try {
+        const data = await apiFetch<Dataset[]>("/datasets")
+        setDatasets(data)
+      } catch (error) {
+        console.error("[v0] Failed to fetch datasets:", error)
+        setDatasets([])
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchDatasets()
+  }, [])
+
+  if (loading) {
+    return (
+      <>
+        <Topbar title="Datasets" breadcrumbs={[{ label: "Datasets" }]} />
+        <main className="flex-1 p-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="rounded-lg border bg-card p-8 text-center text-muted-foreground">Loading datasets...</div>
+          </div>
+        </main>
+      </>
+    )
   }
-}
-
-export default async function DatasetsPage() {
-  const datasets = await getDatasets()
 
   return (
     <>

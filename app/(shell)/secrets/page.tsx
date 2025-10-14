@@ -1,3 +1,5 @@
+"use client"
+
 import { Topbar } from "@/components/layout/topbar"
 import { Button } from "@/components/primitives/button"
 import { DataTable } from "@/components/data/data-table"
@@ -5,18 +7,39 @@ import { apiFetch } from "@/lib/api"
 import { formatRelativeTime } from "@/lib/format"
 import type { Secret } from "@/openapi/openapi-types"
 import { SecretActions } from "./secret-actions"
+import { useEffect, useState } from "react"
 
-async function getSecrets() {
-  try {
-    return await apiFetch<Secret[]>("/secrets")
-  } catch (error) {
-    console.error("[v0] Failed to fetch secrets:", error)
-    return []
+export default function SecretsPage() {
+  const [secrets, setSecrets] = useState<Secret[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchSecrets() {
+      try {
+        const data = await apiFetch<Secret[]>("/secrets")
+        setSecrets(data)
+      } catch (error) {
+        console.error("[v0] Failed to fetch secrets:", error)
+        setSecrets([])
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchSecrets()
+  }, [])
+
+  if (loading) {
+    return (
+      <>
+        <Topbar title="Keys & Secrets" breadcrumbs={[{ label: "Secrets" }]} />
+        <main className="flex-1 p-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="rounded-lg border bg-card p-8 text-center text-muted-foreground">Loading secrets...</div>
+          </div>
+        </main>
+      </>
+    )
   }
-}
-
-export default async function SecretsPage() {
-  const secrets = await getSecrets()
 
   return (
     <>

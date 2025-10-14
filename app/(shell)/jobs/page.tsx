@@ -1,3 +1,5 @@
+"use client"
+
 import { Topbar } from "@/components/layout/topbar"
 import { Button } from "@/components/primitives/button"
 import { Badge } from "@/components/primitives/badge"
@@ -7,19 +9,45 @@ import { apiFetch } from "@/lib/api"
 import type { Job } from "@/openapi/openapi-types"
 import Link from "next/link"
 import { JobActions } from "./job-actions"
+import { useEffect, useState } from "react"
 
-async function getJobsData() {
-  try {
-    const [jobs, dlq] = await Promise.all([apiFetch<Job[]>("/jobs"), apiFetch<Array<Record<string, unknown>>>("/dlq")])
-    return { jobs, dlq }
-  } catch (error) {
-    console.error("[v0] Failed to fetch jobs data:", error)
-    return { jobs: [], dlq: [] }
+export default function JobsPage() {
+  const [jobs, setJobs] = useState<Job[]>([])
+  const [dlq, setDlq] = useState<Array<Record<string, unknown>>>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchJobsData() {
+      try {
+        const [jobsData, dlqData] = await Promise.all([
+          apiFetch<Job[]>("/jobs"),
+          apiFetch<Array<Record<string, unknown>>>("/dlq"),
+        ])
+        setJobs(jobsData)
+        setDlq(dlqData)
+      } catch (error) {
+        console.error("[v0] Failed to fetch jobs data:", error)
+        setJobs([])
+        setDlq([])
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchJobsData()
+  }, [])
+
+  if (loading) {
+    return (
+      <>
+        <Topbar title="Jobs & Schedules" breadcrumbs={[{ label: "Jobs" }]} />
+        <main className="flex-1 p-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="rounded-lg border bg-card p-8 text-center text-muted-foreground">Loading jobs...</div>
+          </div>
+        </main>
+      </>
+    )
   }
-}
-
-export default async function JobsPage() {
-  const { jobs, dlq } = await getJobsData()
 
   return (
     <>

@@ -1,21 +1,44 @@
+"use client"
+
 import { Topbar } from "@/components/layout/topbar"
 import { Button } from "@/components/primitives/button"
 import { DataTable } from "@/components/data/data-table"
 import { apiFetch } from "@/lib/api"
 import type { Flow } from "@/openapi/openapi-types"
 import Link from "next/link"
+import { useEffect, useState } from "react"
 
-async function getFlows() {
-  try {
-    return await apiFetch<Flow[]>("/flows")
-  } catch (error) {
-    console.error("[v0] Failed to fetch flows:", error)
-    return []
+export default function FlowsPage() {
+  const [flows, setFlows] = useState<Flow[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchFlows() {
+      try {
+        const data = await apiFetch<Flow[]>("/flows")
+        setFlows(data)
+      } catch (error) {
+        console.error("[v0] Failed to fetch flows:", error)
+        setFlows([])
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchFlows()
+  }, [])
+
+  if (loading) {
+    return (
+      <>
+        <Topbar title="Flows" breadcrumbs={[{ label: "Flows" }]} />
+        <main className="flex-1 p-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="rounded-lg border bg-card p-8 text-center text-muted-foreground">Loading flows...</div>
+          </div>
+        </main>
+      </>
+    )
   }
-}
-
-export default async function FlowsPage() {
-  const flows = await getFlows()
 
   return (
     <>

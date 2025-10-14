@@ -1,3 +1,5 @@
+"use client"
+
 import { Topbar } from "@/components/layout/topbar"
 import { Button } from "@/components/primitives/button"
 import { Badge } from "@/components/primitives/badge"
@@ -7,19 +9,42 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/primitive
 import { apiFetch } from "@/lib/api"
 import type { User } from "@/openapi/openapi-types"
 import { UserActions } from "./user-actions"
+import { useEffect, useState } from "react"
 
-async function getRBACData() {
-  try {
-    const [users, roles] = await Promise.all([apiFetch<User[]>("/users"), apiFetch<string[]>("/roles")])
-    return { users, roles }
-  } catch (error) {
-    console.error("[v0] Failed to fetch RBAC data:", error)
-    return { users: [], roles: [] }
+export default function RBACPage() {
+  const [users, setUsers] = useState<User[]>([])
+  const [roles, setRoles] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchRBACData() {
+      try {
+        const [usersData, rolesData] = await Promise.all([apiFetch<User[]>("/users"), apiFetch<string[]>("/roles")])
+        setUsers(usersData)
+        setRoles(rolesData)
+      } catch (error) {
+        console.error("[v0] Failed to fetch RBAC data:", error)
+        setUsers([])
+        setRoles([])
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchRBACData()
+  }, [])
+
+  if (loading) {
+    return (
+      <>
+        <Topbar title="Users & Roles" breadcrumbs={[{ label: "RBAC" }]} />
+        <main className="flex-1 p-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="rounded-lg border bg-card p-8 text-center text-muted-foreground">Loading RBAC data...</div>
+          </div>
+        </main>
+      </>
+    )
   }
-}
-
-export default async function RBACPage() {
-  const { users, roles } = await getRBACData()
 
   return (
     <>

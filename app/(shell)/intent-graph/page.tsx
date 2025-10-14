@@ -6,18 +6,26 @@ import { Button } from "@/components/primitives/button"
 import { JsonViewer } from "@/components/misc/json-viewer"
 import { apiFetch } from "@/lib/api"
 import type { IntentGraph } from "@/openapi/openapi-types"
+import { useEffect, useState } from "react"
 
-async function getIntentGraph() {
-  try {
-    return await apiFetch<IntentGraph>("/intents/graph")
-  } catch (error) {
-    console.error("[v0] Failed to fetch intent graph:", error)
-    return null
-  }
-}
+export default function IntentGraphPage() {
+  const [graph, setGraph] = useState<IntentGraph | null>(null)
+  const [loading, setLoading] = useState(true)
 
-export default async function IntentGraphPage() {
-  const graph = await getIntentGraph()
+  useEffect(() => {
+    async function fetchIntentGraph() {
+      try {
+        const data = await apiFetch<IntentGraph>("/intents/graph")
+        setGraph(data)
+      } catch (error) {
+        console.error("[v0] Failed to fetch intent graph:", error)
+        setGraph(null)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchIntentGraph()
+  }, [])
 
   const handleExport = () => {
     if (!graph) return
@@ -28,6 +36,21 @@ export default async function IntentGraphPage() {
     link.href = url
     link.download = "intent-graph.json"
     link.click()
+  }
+
+  if (loading) {
+    return (
+      <>
+        <Topbar title="Intent Graph" breadcrumbs={[{ label: "Intent Graph" }]} />
+        <main className="flex-1 p-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="rounded-lg border bg-card p-8 text-center text-muted-foreground">
+              Loading intent graph...
+            </div>
+          </div>
+        </main>
+      </>
+    )
   }
 
   return (

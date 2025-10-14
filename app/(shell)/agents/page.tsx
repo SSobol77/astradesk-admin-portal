@@ -1,3 +1,5 @@
+"use client"
+
 import { Topbar } from "@/components/layout/topbar"
 import { Button } from "@/components/primitives/button"
 import { Badge } from "@/components/primitives/badge"
@@ -6,18 +8,39 @@ import { apiFetch } from "@/lib/api"
 import type { Agent } from "@/openapi/openapi-types"
 import Link from "next/link"
 import { AgentActions } from "./agent-actions"
+import { useEffect, useState } from "react"
 
-async function getAgents() {
-  try {
-    return await apiFetch<Agent[]>("/agents")
-  } catch (error) {
-    console.error("[v0] Failed to fetch agents:", error)
-    return []
+export default function AgentsPage() {
+  const [agents, setAgents] = useState<Agent[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    async function fetchAgents() {
+      try {
+        const data = await apiFetch<Agent[]>("/agents")
+        setAgents(data)
+      } catch (error) {
+        console.error("[v0] Failed to fetch agents:", error)
+        setAgents([])
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchAgents()
+  }, [])
+
+  if (loading) {
+    return (
+      <>
+        <Topbar title="Agents" breadcrumbs={[{ label: "Agents" }]} />
+        <main className="flex-1 p-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="rounded-lg border bg-card p-8 text-center text-muted-foreground">Loading agents...</div>
+          </div>
+        </main>
+      </>
+    )
   }
-}
-
-export default async function AgentsPage() {
-  const agents = await getAgents()
 
   return (
     <>
