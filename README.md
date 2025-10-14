@@ -9,13 +9,14 @@ Enterprise admin panel for AstraDesk microservices - manage agents, datasets, fl
 - **Type-Safe**: Generated TypeScript types from OpenAPI
 - **Real-Time**: SSE streaming for live run updates
 - **Enterprise UI**: Accessible, responsive, professional design
+- **Mock API Mode**: Test UI without backend (development/demo mode)
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js 22+ LTS
-- Backend API running (see OpenAPI spec)
+- Backend API running (see OpenAPI spec) OR use Mock API mode
 
 ### Installation
 
@@ -31,10 +32,14 @@ Copy `.env.example` to `.env.local`:
 cp .env.example .env.local
 \`\`\`
 
-Edit `.env.local` and set your API base URL:
+Edit `.env.local` and configure your environment:
 
 \`\`\`
+# Backend API URL (required if not using mock mode)
 NEXT_PUBLIC_API_BASE_URL=http://localhost:8080/api/admin/v1
+
+# Set to "true" to use realistic mock data instead of real API
+NEXT_PUBLIC_MOCK_API=false
 \`\`\`
 
 ### Development
@@ -45,6 +50,17 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000)
 
+### Mock API Mode (Testing Without Backend)
+
+For development, testing, or demos without a running backend:
+
+1. Set `NEXT_PUBLIC_MOCK_API=true` in your `.env.local`
+2. The app will use realistic mock data for all endpoints
+3. All pages will work with simulated data and network delays
+4. Perfect for UI development, testing, and demonstrations
+
+**Note**: Mock mode returns predefined data from `lib/mock-data.ts`. No actual API calls are made.
+
 ### Authentication
 
 The app uses Bearer JWT authentication. On first load, you'll need to set a token:
@@ -53,15 +69,7 @@ The app uses Bearer JWT authentication. On first load, you'll need to set a toke
 2. The app will store it in localStorage as `astradesk_token`
 3. All API requests include `Authorization: Bearer <token>`
 
-### OpenAPI Sync
-
-The UI is strictly bound to the OpenAPI spec in `openapi/OpenAPI.yaml`. Types are pre-generated in `openapi/openapi-types.d.ts`.
-
-To regenerate types after OpenAPI changes:
-
-\`\`\`bash
-npm run openapi:gen
-\`\`\`
+**In Mock Mode**: Authentication is bypassed - no token required.
 
 ## Architecture
 
@@ -90,6 +98,7 @@ lib/
   api.ts            # Type-safe fetch wrapper
   sse.ts            # SSE client with reconnect
   guards.ts         # Feature availability checks
+  mock-data.ts      # Mock data for development/demo mode
 openapi/
   OpenAPI.yaml      # Source of truth
   openapi-types.d.ts # Generated types
