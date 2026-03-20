@@ -87,16 +87,6 @@
   <img src="public/dashboard.png" alt="Dashboard View" width="700"/>
 </p>
 
-### Agents Management
-<p align="center">
-  <img src="docs/assets/agents.png" alt="Agents Management" width="700"/>
-</p>
-
-### Runs & Logs (Live Streaming)
-<p align="center">
-  <img src="docs/assets/runs.png" alt="Runs and Logs" width="700"/>
-</p>
-
 ---
 
 ## 🛠️ Tech Stack
