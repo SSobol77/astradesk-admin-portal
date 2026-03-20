@@ -1,8 +1,17 @@
+// File: app/(shell)/settings/page.tsx
+// This is the settings page for the application. It allows users to configure various settings related to integrations, localization, and platform preferences.
+// The page fetches the current settings from the backend API and renders them in a tabbed interface using the `Tabs` component.
+// Each tab corresponds to a different category of settings, and the `SettingsForm` component is used to render the form for each category.
+// The `getSettings` function fetches the settings data from the backend APIs and handles any errors that may occur during the fetch process.
+
+
 import { Topbar } from "@/components/layout/topbar"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/primitives/tabs"
 import { apiFetch } from "@/lib/api"
 import type { Setting } from "@/openapi/openapi-types"
 import { SettingsForm } from "./settings-form"
+
+export const dynamic = "force-dynamic"
 
 async function getSettings() {
   try {

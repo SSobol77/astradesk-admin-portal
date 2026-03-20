@@ -1,3 +1,9 @@
+// File: app/(shell)/audit/page.tsx
+// This is the audit trail page for the application. It allows users to view an immutable log of all system actions for compliance and monitoring purposes.
+// The page fetches a list of audit entries from the backend API and displays them in a data table format.
+// Each audit entry shows the timestamp, user, action, resource, and a link to view more details about that specific entry.
+// The `getAuditEntries` function fetches the audit entries data from the backend API and handles any errors that may occur during the fetch process.
+
 import { Topbar } from "@/components/layout/topbar"
 import { DataTable } from "@/components/data/data-table"
 import { apiFetch } from "@/lib/api"

@@ -1,9 +1,18 @@
+// File: app/(shell)/tools/page.tsx
+// This is the tools and connectors page for the application. It allows users to view and manage their external tool integrations.
+// The page fetches a list of connectors from the backend API and displays them in a grid layout using `Card` components.
+// Each connector card shows the connector's name and type, and links to a detailed view of the connector.
+// If there are no connectors, a message is displayed prompting the user to create their first connector.
+// The `getConnectors` function fetches the connectors data from the backend API and handles any errors that may occur during the fetch process.
+
 import { Topbar } from "@/components/layout/topbar"
 import { Button } from "@/components/primitives/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/primitives/card"
 import { apiFetch } from "@/lib/api"
 import type { Connector } from "@/openapi/openapi-types"
 import Link from "next/link"
+
+export const dynamic = "force-dynamic"
 
 async function getConnectors() {
   try {

@@ -1,3 +1,9 @@
+// File: app/(shell)/runs/page.tsx
+// This is the runs and logs page for the application. It allows users to monitor agent execution runs and view detailed logs.
+// The page fetches a list of runs from the backend API and displays them in a data table format.
+// Each run entry shows the run ID, associated agent, status, latency, and cost. Users can click on a run ID to view more details about that specific run.
+// The `getRuns` function fetches the runs data from the backend API and handles any errors that may occur during the fetch process.
+
 import { Topbar } from "@/components/layout/topbar"
 import { Badge } from "@/components/primitives/badge"
 import { DataTable } from "@/components/data/data-table"

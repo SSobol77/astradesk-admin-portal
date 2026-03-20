@@ -1,3 +1,11 @@
+// File: app/(shell)/page.tsx
+// This is the main dashboard page for the application. It displays key metrics, system health, and recent errors.
+// The page fetches data from multiple API endpoints and renders it using various UI components.
+// The `dynamic` export is set to "force-dynamic" to ensure that this page is always rendered on the server and not statically optimized.
+// The page uses the `Topbar` component for the header, `KpiCard` for displaying key performance indicators, and `Card` components for system health and recent errors.
+// The `getDashboardData` function fetches data from the backend APIs and handles any errors that may occur during the fetch process.
+import "@/styles/globals.css"
+
 import { Topbar } from "@/components/layout/topbar"
 import { KpiCard } from "@/components/charts/kpi-card"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/primitives/card"
@@ -7,6 +15,8 @@ import Link from "next/link"
 import { apiFetch } from "@/lib/api"
 import { formatCurrency, formatNumber, formatLatency } from "@/lib/format"
 import type { HealthStatus, UsageMetrics } from "@/openapi/openapi-types"
+
+export const dynamic = "force-dynamic"
 
 async function getDashboardData() {
   try {

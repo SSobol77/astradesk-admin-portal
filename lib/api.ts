@@ -41,7 +41,8 @@ function getMockData(endpoint: string): any {
     "/errors/recent": mockErrors,
     "/flows": mockFlows,
     "/datasets": mockDatasets,
-    "/tools": mockConnectors,
+    "/connectors": mockConnectors,  // Fixed: Changed from "/tools" to "/connectors"
+    "/tools": mockConnectors,      // Added: Keeping backward compatibility for tools endpoint
     "/secrets": mockSecrets,
     "/rbac/users": mockUsers,
     "/rbac/roles": mockRoles,
