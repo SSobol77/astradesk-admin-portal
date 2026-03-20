@@ -1,5 +1,3 @@
-# 🖥️ AstraDesk Admin Portal
-
 <p align="center">
   <img src="public/AstraDesk_wlogo.png" alt="AstraDesk Admin Portal Dashboard" width="800"/>
 </p>
@@ -25,6 +23,13 @@
 </p>
 
 ---
+
+<br>
+
+<br>
+
+# 🖥️ AstraDesk Admin Portal
+
 
 ## 📋 Table of Contents
 
