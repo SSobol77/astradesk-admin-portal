@@ -12,9 +12,11 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: "AstraDesk Admin",
-  description: "Enterprise admin panel for AstraDesk microservices",
-    generator: 'v0.app'
+  title: "AstraDesk Admin Portal",
+  description: "Admin portal for AstraDesk framework microservices",
+  icons: {
+    icon: "public/favicon-64.png",
+  },
 }
 
 export default function RootLayout({
