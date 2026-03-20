@@ -84,7 +84,7 @@
 
 ### Dashboard
 <p align="center">
-  <img src="docs/assets/dashboard.png" alt="Dashboard View" width="700"/>
+  <img src="public/dashboard.png" alt="Dashboard View" width="700"/>
 </p>
 
 ### Agents Management
